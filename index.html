@@ -6,6 +6,7 @@
   <title>新地球音乐 - Neo Earth Music | 官方下载</title>
   <meta name="description" content="新地球音乐（Neo Earth Music）— 内置星灵AI 的跨平台AI原生音乐流媒体与创作客户端，探索音乐新宇宙。">
   <link rel="icon" type="image/png" href="assets/app-icon.png">
+  <link rel="preload" as="image" href="assets/spirit-transparent.webp" type="image/webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <style>
@@ -125,7 +126,7 @@
     }
     @keyframes sheen { 0%,60% { left:-80%; } 100% { left:160%; } }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(236,65,65,0.5), inset 0 1px 0 rgba(255,255,255,0.22); }
-    .btn-primary:active { transform: translateY(0); box-shadow: 0 2px 12px rgba(236,65,65,0.3), inset 0 1px 0 rgba(255,255,255,0.18); transition-duration: 0.1s; }
+    .btn-primary:active { transform: translateY(0); box-shadow: 0 2px 12px rgba(236,65,65,0.3); transition-duration: 0.1s; }
     .btn-primary:disabled { opacity: 0.6; cursor: wait; transform: none; }
     .btn-glass {
       background: var(--glass-bg); color: var(--text-primary);
@@ -135,132 +136,113 @@
     .btn-glass:active { transform: translateY(0); transition-duration: 0.1s; }
     .btn svg { width: 20px; height: 20px; flex-shrink: 0; }
 
-    /* ===== Live2D 全息舱 ===== */
-    .hero-visual { display: flex; align-items: center; justify-content: center; min-height: 600px; }
-    .holo-stage { position: relative; width: 460px; height: 620px; }
+    /* ===== 星灵AI 立体展示 ===== */
+    .hero-visual {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 620px; perspective: 1400px;
+    }
+    .spirit-stage {
+      position: relative;
+      width: 460px; height: 620px;
+      transform-style: preserve-3d;
+      transition: transform 0.25s ease-out;
+    }
+    /* 主体图：去白底 WebP */
+    .spirit-img {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%; max-height: 100%; object-fit: contain;
+      z-index: 2;
+      filter:
+        drop-shadow(0 0 70px rgba(139, 92, 246, 0.45))
+        drop-shadow(0 0 30px rgba(34, 211, 238, 0.18))
+        drop-shadow(0 24px 40px rgba(0, 0, 0, 0.5));
+      animation: spirit-breathe 6s ease-in-out infinite;
+    }
+    @keyframes spirit-breathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(1) translateY(0); }
+      50% { transform: translate(-50%, -50%) scale(1.015) translateY(-8px); }
+    }
 
-    /* Live2D 画布 */
-    #live2dCanvas {
-      position: absolute; inset: 0; z-index: 2;
-      width: 100%; height: 100%;
-      cursor: grab;
-    }
-    #live2dCanvas:active { cursor: grabbing; }
-    #live2dCanvas canvas { width: 100% !important; height: 100% !important; }
-
-    /* 加载器 */
-    .holo-loader {
-      position: absolute; inset: 0; z-index: 3;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 16px; color: var(--text-muted); font-size: 13px; letter-spacing: 2px;
-      transition: opacity 0.6s ease; pointer-events: none;
-    }
-    .holo-loader.hidden { opacity: 0; }
-    .loader-ring {
-      width: 48px; height: 48px; border-radius: 50%;
-      border: 2px solid rgba(139,92,246,0.15);
-      border-top-color: var(--accent-purple);
-      animation: loader-spin 1s linear infinite;
-    }
-    @keyframes loader-spin { to { transform: rotate(360deg); } }
-
-    /* 静态回退图（CDN 失败时） */
-    .holo-fallback {
-      position: absolute; inset: 0; z-index: 2; display: none;
-      align-items: flex-start; justify-content: center;
-    }
-    .holo-fallback.show { display: flex; }
-    .holo-fallback img {
-      width: 100%; height: 100%; object-fit: contain; object-position: center top;
-      -webkit-mask-image: linear-gradient(to bottom, black 0%, black 62%, rgba(0,0,0,0.35) 90%, transparent 100%);
-      mask-image: linear-gradient(to bottom, black 0%, black 62%, rgba(0,0,0,0.35) 90%, transparent 100%);
-      filter: drop-shadow(0 0 46px rgba(139, 92, 246, 0.38)) saturate(1.08);
-      animation: spirit-float 6s ease-in-out infinite;
-    }
-    @keyframes spirit-float { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-14px);} }
-
-    /* 全息舱氛围层（弱化版，让 Live2D 主体成为绝对焦点） */
-    .holo-beam {
-      position: absolute; bottom: 70px; left: 50%; width: 220px; height: 280px;
-      transform: translateX(-50%);
-      background: conic-gradient(from 200deg at 50% 100%,
-        transparent 0deg, rgba(139,92,246,0.08) 30deg, rgba(34,211,238,0.06) 60deg, transparent 90deg);
-      filter: blur(8px); animation: beam-breathe 8s ease-in-out infinite;
-      pointer-events: none; z-index: 0; opacity: 0.6;
-    }
-    @keyframes beam-breathe {
-      0%,100% { opacity: 0.5; transform: translateX(-50%) scaleY(1); }
-      50% { opacity: 0.7; transform: translateX(-50%) scaleY(1.04); }
-    }
-    .holo-pool {
-      position: absolute; bottom: 56px; left: 50%; width: 200px; height: 28px;
-      transform: translateX(-50%);
-      background: radial-gradient(ellipse at center,
-        rgba(139,92,246,0.28) 0%, rgba(59,130,246,0.12) 50%, transparent 75%);
-      filter: blur(8px); animation: pool-pulse 4s ease-in-out infinite;
+    /* 局部高光：身体中心点光 */
+    .spirit-spotlight {
+      position: absolute; left: 50%; top: 38%;
+      transform: translate(-50%, -50%);
+      width: 280px; height: 380px;
+      background: radial-gradient(ellipse at center, rgba(196,181,253,0.20) 0%, rgba(34,211,238,0.08) 35%, transparent 65%);
+      filter: blur(20px);
       z-index: 1; pointer-events: none;
+      animation: spot-pulse 5s ease-in-out infinite;
+    }
+    @keyframes spot-pulse {
+      0%, 100% { opacity: 0.75; }
+      50% { opacity: 1; }
+    }
+
+    /* 背后光晕环 */
+    .spirit-aura {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 360px; height: 360px; border-radius: 50%;
+      background: conic-gradient(from 0deg,
+        transparent 0deg, rgba(139,92,246,0.18) 30deg, transparent 90deg,
+        transparent 180deg, rgba(34,211,238,0.16) 240deg, transparent 300deg);
+      filter: blur(28px);
+      z-index: 0; pointer-events: none;
+      animation: aura-rotate 18s linear infinite;
+      opacity: 0.9;
+    }
+    @keyframes aura-rotate { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+    /* 地面光池（脚下反光） */
+    .spirit-pool {
+      position: absolute; bottom: 38px; left: 50%;
+      transform: translateX(-50%);
+      width: 220px; height: 22px;
+      background: radial-gradient(ellipse at center,
+        rgba(139,92,246,0.35) 0%, rgba(34,211,238,0.12) 50%, transparent 75%);
+      filter: blur(10px);
+      z-index: 1; pointer-events: none;
+      animation: pool-pulse 4s ease-in-out infinite;
     }
     @keyframes pool-pulse {
-      0%,100% { opacity: 0.55; transform: translateX(-50%) scale(1); }
-      50% { opacity: 0.75; transform: translateX(-50%) scale(1.05); }
-    }
-    .holo-ring { position: absolute; border-radius: 50%; pointer-events: none; z-index: 1; }
-    .holo-ring-back {
-      width: 260px; height: 260px; top: 46%; left: 50%; transform: translate(-50%, -50%);
-      border: 1px solid rgba(139, 92, 246, 0.18);
-      box-shadow: 0 0 30px rgba(139,92,246,0.08), inset 0 0 30px rgba(139,92,246,0.04);
-    }
-    .holo-ring-front {
-      width: 230px; height: 230px; top: 47%; left: 50%;
-      transform: translate(-50%, -50%);
-      border: 1px dashed rgba(34, 211, 238, 0.22);
-      animation: ring-spin 30s linear infinite;
-    }
-    .holo-ring-front::before {
-      content: ''; position: absolute; inset: -2px; border-radius: 50%;
-      background: conic-gradient(from 0deg, transparent 0deg, rgba(34,211,238,0.4) 40deg, transparent 110deg, transparent 250deg, rgba(139,92,246,0.32) 300deg, transparent 360deg);
-      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
-      mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
-      animation: ring-spin 7s linear infinite;
-    }
-    @keyframes ring-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-
-    /* 音符粒子（在模型后飘） */
-    .holo-particle {
-      position: absolute; font-size: 15px; color: rgba(196, 181, 253, 0.75);
-      text-shadow: 0 0 12px rgba(139,92,246,0.8);
-      animation: orbit-rise var(--dur) ease-in-out infinite;
-      animation-delay: var(--delay); opacity: 0; z-index: 1; pointer-events: none;
-    }
-    @keyframes orbit-rise {
-      0% { transform: translate(0, 0) rotate(0deg) scale(0.7); opacity: 0; }
-      15% { opacity: 0.9; } 85% { opacity: 0.5; }
-      100% { transform: translate(var(--dx), -180px) rotate(var(--rot)) scale(1.1); opacity: 0; }
+      0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.85; transform: translateX(-50%) scale(1.06); }
     }
 
-    .holo-nameplate {
-      position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
+    /* 上升粒子（仅 3 个） */
+    .spirit-particle {
+      position: absolute; font-size: 14px; color: rgba(196, 181, 253, 0.75);
+      text-shadow: 0 0 10px rgba(139,92,246,0.8);
+      animation: rise var(--dur) ease-in-out infinite;
+      animation-delay: var(--delay); opacity: 0; z-index: 3; pointer-events: none;
+    }
+    @keyframes rise {
+      0% { transform: translate(0,0) rotate(0deg) scale(0.7); opacity: 0; }
+      15% { opacity: 0.9; }
+      85% { opacity: 0.5; }
+      100% { transform: translate(var(--dx), -160px) rotate(var(--rot)) scale(1.05); opacity: 0; }
+    }
+
+    /* 玻璃铭牌 */
+    .spirit-nameplate {
+      position: absolute; bottom: -6px; left: 50%;
+      transform: translateX(-50%);
       padding: 10px 28px; border-radius: 100px;
       background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
       backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%);
       box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
       text-align: center; z-index: 5; white-space: nowrap;
     }
-    .holo-nameplate .np-name {
+    .spirit-nameplate .np-name {
       font-size: 15px; font-weight: 700;
       background: linear-gradient(90deg, #c4b5fd, #67e8f9);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       letter-spacing: 1px;
     }
-    .holo-nameplate .np-role { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
-
-    .holo-hint {
-      position: absolute; top: 10px; right: 6px; z-index: 5;
-      font-size: 11px; color: var(--text-muted); letter-spacing: 1px;
-      padding: 5px 12px; border-radius: 100px;
-      background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(8px);
-      opacity: 0.85;
+    .spirit-nameplate .np-role {
+      font-size: 11px; color: var(--text-muted); letter-spacing: 2px;
+      text-transform: uppercase; margin-top: 2px;
     }
 
     /* ===== Version Bar ===== */
@@ -322,10 +304,13 @@
     /* ===== Install Steps ===== */
     .install { padding: 0 40px 100px; }
     .install-container { max-width: 920px; margin: 0 auto; }
-    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; position: relative; }
-    .step-card {
-      padding: 32px 28px; text-align: center; position: relative;
+    .install-glass {
+      border-radius: 24px; background: var(--glass-bg); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      padding: 16px; overflow: hidden;
     }
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; position: relative; }
+    .step-card { padding: 32px 28px; text-align: center; position: relative; }
     .step-num {
       width: 44px; height: 44px; margin: 0 auto 16px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
@@ -340,11 +325,6 @@
     .step-connector {
       position: absolute; top: 54px; left: calc(100% - 40px); width: 80px; height: 1px;
       background: linear-gradient(90deg, rgba(139,92,246,0.4), rgba(34,211,238,0.3));
-    }
-    .install-glass {
-      border-radius: 24px; background: var(--glass-bg); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
-      padding: 16px; overflow: hidden;
     }
 
     /* ===== Download ===== */
@@ -446,11 +426,10 @@
       .hero-subtitle { max-width: 100%; }
       .hero-actions { justify-content: center; }
       .version-bar { justify-content: center; flex-wrap: wrap; }
-      .hero-visual { min-height: 540px; order: -1; }
-      .holo-stage { width: 330px; height: 460px; }
-      .holo-beam { width: 270px; height: 350px; }
-      .holo-ring-back { width: 245px; height: 245px; }
-      .holo-ring-front { width: 215px; height: 215px; }
+      .hero-visual { min-height: 560px; order: -1; }
+      .spirit-stage { width: 330px; height: 480px; }
+      .spirit-aura { width: 280px; height: 280px; }
+      .spirit-spotlight { width: 220px; height: 300px; }
       .nav-links { display: none; }
       .download-card { padding: 36px 24px; }
       .steps-grid { grid-template-columns: 1fr; gap: 8px; }
@@ -459,11 +438,9 @@
     @media (max-width: 480px) {
       .hero { padding: 100px 20px 40px; }
       .features, .download, .preview, .install { padding-left: 20px; padding-right: 20px; }
-      .holo-stage { width: 265px; height: 380px; }
-      .holo-beam { width: 215px; height: 285px; }
-      .holo-ring-back { width: 198px; height: 198px; }
-      .holo-ring-front { width: 172px; height: 172px; }
-      .holo-hint { display: none; }
+      .spirit-stage { width: 270px; height: 400px; }
+      .spirit-aura { width: 230px; height: 230px; }
+      .spirit-spotlight { width: 180px; height: 250px; }
       .btn { padding: 12px 24px; font-size: 14px; }
     }
 
@@ -528,27 +505,17 @@
           </div>
         </div>
 
-        <!-- Live2D 全息舱 -->
+        <!-- 星灵AI 立体展示 -->
         <div class="hero-visual">
-          <div class="holo-stage">
-            <div class="holo-beam"></div>
-            <div class="holo-pool"></div>
-            <div class="holo-ring holo-ring-back"></div>
-            <span class="holo-particle" style="--dx:140px; --rot:14deg; --dur:5.6s; --delay:0s; top:54%; left:74%;">♪</span>
-            <span class="holo-particle" style="--dx:-125px; --rot:-10deg; --dur:6.8s; --delay:2.4s; top:58%; left:20%;">♫</span>
-            <span class="holo-particle" style="--dx:48px; --rot:6deg; --dur:7.4s; --delay:4.6s; top:62%; left:55%;">♬</span>
-
-            <div class="holo-fallback" id="holoFallback">
-              <img src="assets/spirit-fullbody.png" alt="星灵 AI" draggable="false">
-            </div>
-            <div id="live2dCanvas"></div>
-            <div class="holo-loader" id="holoLoader">
-              <div class="loader-ring"></div>
-              <div>STELLA LOADING</div>
-            </div>
-            <div class="holo-ring holo-ring-front"></div>
-            <div class="holo-hint">✦ 点击她试试 · 视线跟随鼠标</div>
-            <div class="holo-nameplate">
+          <div class="spirit-stage" id="spiritStage">
+            <div class="spirit-aura"></div>
+            <div class="spirit-spotlight"></div>
+            <img src="assets/spirit-transparent.webp" alt="星灵AI" class="spirit-img" draggable="false">
+            <span class="spirit-particle" style="--dx:140px; --rot:14deg; --dur:5.6s; --delay:0s; top:55%; left:74%;">♪</span>
+            <span class="spirit-particle" style="--dx:-125px; --rot:-10deg; --dur:6.8s; --delay:2.4s; top:58%; left:20%;">♫</span>
+            <span class="spirit-particle" style="--dx:48px; --rot:6deg; --dur:7.4s; --delay:4.6s; top:62%; left:55%;">♬</span>
+            <div class="spirit-pool"></div>
+            <div class="spirit-nameplate">
               <div class="np-name">星灵AI</div>
               <div class="np-role">内置 AI 助手</div>
             </div>
@@ -714,15 +681,9 @@
 
   <div class="toast" id="toast"></div>
 
-  <!-- Live2D 运行时（CDN 免费资源，加载失败自动回退静态形象） -->
-  <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.10/dist/browser/pixi.min.js" onerror="window.__pixiFailed=true"></script>
-  <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js" onerror="window.__coreFailed=true"></script>
-  <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/index.min.js" onerror="window.__l2dFailed=true"></script>
-
   <script>
     /* =====================================================
        下载配置 — GitHub Releases 免费托管
-       直链格式：https://github.com/<owner>/<repo>/releases/download/<tag>/<file>
        ===================================================== */
     const DOWNLOAD_CONFIG = {
       localUrl: 'download/NewEarthMusic-Setup-0.1.0.exe',
@@ -805,68 +766,20 @@
       resize(); requestAnimationFrame(draw);
     })();
 
-    /* ========== Live2D 星灵AI ========== */
+    /* ========== 星灵AI 鼠标 3D 视差 ========== */
     (function () {
-      const loader = document.getElementById('holoLoader');
-      const fallback = document.getElementById('holoFallback');
-      const holder = document.getElementById('live2dCanvas');
-
-      function useFallback() {
-        loader.classList.add('hidden');
-        fallback.classList.add('show');
-      }
-
-      async function initLive2D() {
-        if (window.__pixiFailed || window.__coreFailed || window.__l2dFailed ||
-            typeof PIXI === 'undefined' || !window.Live2DCubismCore) { useFallback(); return; }
-
-        try {
-          const app = new PIXI.Application({
-            view: document.createElement('canvas'),
-            transparent: true,
-            autoStart: true,
-            resolution: window.devicePixelRatio || 1,
-            autoDensity: true,
-            antialias: true
-          });
-          holder.appendChild(app.view);
-
-          const stageWidth = () => holder.clientWidth || 460;
-          const stageHeight = () => holder.clientHeight || 620;
-          app.renderer.resize(stageWidth(), stageHeight());
-
-          const model = await PIXI.live2d.Live2DModel.from('assets/live2d/hiyori/Hiyori.model3.json');
-
-          // 按舞台尺寸适配模型
-          const fit = () => {
-            const w = stageWidth(), h = stageHeight();
-            app.renderer.resize(w, h);
-            const scale = Math.min(w / model.internalModel.originalWidth, h / model.internalModel.originalHeight) * 1.25;
-            model.scale.set(scale);
-            model.anchor.set(0.5, 0.5);
-            model.position.set(w / 2, h / 2 + h * 0.04);
-          };
-          fit();
-          app.stage.addChild(model);
-          window.addEventListener('resize', fit);
-
-          // 视线跟随鼠标（整页范围）
-          window.addEventListener('pointermove', e => model.focus(e.clientX, e.clientY));
-
-          // 点击身体播放动作
-          model.on('hit', hitAreas => {
-            if (hitAreas.includes('Body')) model.motion('TapBody');
-          });
-
-          loader.classList.add('hidden');
-        } catch (err) {
-          console.warn('Live2D init failed, fallback to static image:', err);
-          useFallback();
-        }
-      }
-
-      if (document.readyState === 'complete') initLive2D();
-      else window.addEventListener('load', initLive2D);
+      const stage = document.getElementById('spiritStage');
+      const visual = document.querySelector('.hero-visual');
+      if (!stage || !visual) return;
+      visual.addEventListener('mousemove', (e) => {
+        const rect = visual.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        stage.style.transform = 'rotateY(' + (x * 10) + 'deg) rotateX(' + (-y * 7) + 'deg)';
+      });
+      visual.addEventListener('mouseleave', () => {
+        stage.style.transform = 'rotateY(0deg) rotateX(0deg)';
+      });
     })();
 
     /* ========== Navbar & Reveal ========== */
