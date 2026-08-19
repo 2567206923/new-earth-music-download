@@ -1,3 +1,7 @@
 # 安装包不进 git（GitHub 单文件限制 100MB，exe 253MB 必须走 Releases 托管）
 download/*.exe
 download/*.blockmap
+# 临时截图/测试文件不进 git
+preview.png
+test-webp.png
+*.tmp
