@@ -583,13 +583,27 @@
       .hero-subtitle { max-width: 100%; }
       .hero-actions { justify-content: center; }
       .version-bar { justify-content: center; flex-wrap: wrap; }
-      .hero-visual { min-height: 620px; order: -1; }
-      .spirit-stage { width: 340px; height: 540px; }
-      .spirit-aura { width: 280px; height: 280px; }
-      .spirit-head-light { width: 180px; height: 220px; top: 24%; }
-      .spirit-chest-glow { width: 150px; height: 180px; top: 46%; }
-      .spirit-nameplate { bottom: 100px; padding: 8px 24px; }
-      .greeting-card { width: 292px; bottom: 14px; }
+      .hero-visual { min-height: auto; order: -1; }
+      /* 平板/手机：立绘改为纵向流式，卡片排在立绘下方，不再遮挡人物 */
+      .spirit-stage {
+        width: 340px; height: auto;
+        display: flex; flex-direction: column; align-items: center;
+      }
+      .spirit-img {
+        position: relative; left: auto; top: auto;
+        transform: none; width: 300px; max-height: none;
+        animation: none;
+      }
+      .spirit-aura, .spirit-head-light, .spirit-chest-glow, .spirit-pool { display: none; }
+      .spirit-nameplate {
+        position: relative; left: auto; bottom: auto;
+        transform: none; margin-top: 16px; padding: 8px 24px;
+      }
+      .greeting-card {
+        position: relative; left: auto; bottom: auto;
+        transform: none; margin-top: 14px; width: 300px;
+        animation: none;
+      }
       .nav-links { display: none; }
       .download-card { padding: 36px 24px; }
       .steps-grid { grid-template-columns: 1fr; gap: 8px; }
@@ -598,14 +612,12 @@
     @media (max-width: 480px) {
       .hero { padding: 100px 20px 40px; }
       .features, .download, .preview, .install { padding-left: 20px; padding-right: 20px; }
-      .spirit-stage { width: 280px; height: 460px; }
-      .spirit-aura { width: 230px; height: 230px; }
-      .spirit-head-light { width: 150px; height: 180px; top: 24%; }
-      .spirit-chest-glow { width: 120px; height: 150px; top: 46%; }
-      .spirit-nameplate { bottom: 96px; padding: 7px 20px; }
+      .spirit-stage { width: 280px; }
+      .spirit-img { width: 250px; }
+      .spirit-nameplate { margin-top: 14px; padding: 7px 20px; }
       .spirit-nameplate .np-name { font-size: 13px; }
       .spirit-nameplate .np-role { font-size: 9px; }
-      .greeting-card { width: 250px; padding: 11px 14px; bottom: 10px; }
+      .greeting-card { margin-top: 12px; width: 260px; padding: 11px 14px; }
       .greeting-avatar { width: 42px; height: 42px; }
       .greeting-text { font-size: 12px; }
       .btn { padding: 12px 24px; font-size: 14px; }
@@ -809,8 +821,8 @@
               <button class="platform-btn platform-btn-disabled" disabled>即将推出</button>
             </div>
             <div class="platform-card coming-soon">
-              <span class="platform-icon">🐧</span>
-              <div class="platform-name">Linux</div>
+              <span class="platform-icon">📱</span>
+              <div class="platform-name">iOS</div>
               <div class="platform-status">敬请期待</div>
               <button class="platform-btn platform-btn-disabled" disabled>即将推出</button>
             </div>
