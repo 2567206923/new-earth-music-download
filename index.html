@@ -153,7 +153,7 @@
     }
     .spirit-stage {
       position: relative;
-      width: 460px; height: 620px;
+      width: 470px; height: 680px;
       display: flex; align-items: center; justify-content: center;
       transition: transform 0.25s ease-out;
       will-change: transform;
@@ -230,11 +230,11 @@
     }
     @keyframes aura-rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
 
-    /* 地面光池（脚下反光） */
+    /* 地面光池（脚下反光 · 位于铭牌上方） */
     .spirit-pool {
-      position: absolute; bottom: 60px; left: 50%;
+      position: absolute; bottom: 172px; left: 50%;
       transform: translateX(-50%);
-      width: 240px; height: 26px;
+      width: 250px; height: 28px;
       background: radial-gradient(ellipse at center,
         rgba(139,92,246,0.40) 0%, rgba(34,211,238,0.14) 50%, transparent 75%);
       filter: blur(12px);
@@ -262,15 +262,23 @@
       100% { transform: translate(var(--dx), -160px) rotate(var(--rot)) scale(1.05); opacity: 0; }
     }
 
-    /* 玻璃铭牌（不透明加深，遮住图片底部） */
+    /* 玻璃铭牌（液态玻璃 · 上层） */
     .spirit-nameplate {
-      position: absolute; bottom: 16px; left: 50%;
+      position: absolute; bottom: 116px; left: 50%;
       transform: translateX(-50%);
-      padding: 10px 28px; border-radius: 100px;
-      background: rgba(15, 12, 30, 0.85); border: 1px solid rgba(139, 92, 246, 0.35);
-      backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 20px rgba(139,92,246,0.18), inset 0 1px 0 rgba(255,255,255,0.08);
+      padding: 10px 30px; border-radius: 100px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04) 45%, rgba(139,92,246,0.08));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4),
+                  0 0 24px rgba(139,92,246,0.2),
+                  inset 0 1px 0 rgba(255,255,255,0.16),
+                  inset 0 -1px 0 rgba(255,255,255,0.03);
       text-align: center; z-index: 5; white-space: nowrap;
+    }
+    .spirit-nameplate::before {
+      content: ''; position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
     }
     .spirit-nameplate .np-name {
       font-size: 15px; font-weight: 700;
@@ -283,28 +291,41 @@
       text-transform: uppercase; margin-top: 2px;
     }
 
-    /* ===== Hero 浮窗：星灵AI 问候卡 ===== */
+    /* ===== 星灵AI 问候卡（铭牌正下方 · 液态玻璃） ===== */
     .greeting-card {
       position: absolute;
-      left: 4%; bottom: 12%;
+      left: 50%; bottom: 20px;
+      transform: translateX(-50%);
       width: 320px;
       padding: 14px 18px;
       border-radius: 18px;
-      background: rgba(20, 16, 38, 0.55);
-      border: 1px solid rgba(139, 92, 246, 0.25);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.5),
-                  0 0 24px rgba(139,92,246,0.18),
-                  inset 0 1px 0 rgba(255,255,255,0.08);
+      background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03) 45%, rgba(139,92,246,0.07));
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      backdrop-filter: blur(28px) saturate(180%) brightness(1.05);
+      -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.05);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45),
+                  0 0 28px rgba(139,92,246,0.2),
+                  inset 0 1px 0 rgba(255,255,255,0.15),
+                  inset 0 -1px 0 rgba(255,255,255,0.03);
       display: flex; align-items: center; gap: 14px;
       z-index: 6;
       animation: card-float 5s ease-in-out infinite;
       cursor: default;
     }
+    .greeting-card::before {
+      content: ''; position: absolute; top: 0; left: 12%; right: 12%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent);
+      border-radius: 1px;
+    }
+    .greeting-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      border-radius: inherit;
+      background: radial-gradient(ellipse at 25% 0%, rgba(255,255,255,0.10), transparent 55%);
+      pointer-events: none;
+    }
     @keyframes card-float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-6px); }
     }
     .greeting-avatar {
       width: 52px; height: 52px; border-radius: 50%;
@@ -371,9 +392,13 @@
       gap: 24px; max-width: 1120px; margin: 0 auto;
     }
     .feature-card {
-      padding: 32px; border-radius: 20px; background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+      padding: 32px; border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02) 45%, rgba(139,92,246,0.06));
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35),
+                  inset 0 1px 0 rgba(255,255,255,0.12),
+                  inset 0 -1px 0 rgba(255,255,255,0.02);
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
     }
     .feature-card::before {
@@ -405,9 +430,19 @@
     .install { padding: 0 40px 100px; }
     .install-container { max-width: 920px; margin: 0 auto; }
     .install-glass {
-      border-radius: 24px; background: var(--glass-bg); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02) 45%, rgba(59,130,246,0.05));
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35),
+                  inset 0 1px 0 rgba(255,255,255,0.12),
+                  inset 0 -1px 0 rgba(255,255,255,0.02);
       padding: 16px; overflow: hidden;
+      position: relative;
+    }
+    .install-glass::before {
+      content: ''; position: absolute; top: 0; left: 12%; right: 12%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
     }
     .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; position: relative; }
     .step-card { padding: 32px 28px; text-align: center; position: relative; }
@@ -431,9 +466,19 @@
     .download { padding: 100px 40px; }
     .download-container { max-width: 920px; margin: 0 auto; }
     .download-card {
-      border-radius: 28px; background: var(--glass-bg); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02) 40%, rgba(139,92,246,0.07));
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      backdrop-filter: blur(32px) saturate(200%); -webkit-backdrop-filter: blur(32px) saturate(200%);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.4),
+                  inset 0 1px 0 rgba(255,255,255,0.14),
+                  inset 0 -1px 0 rgba(255,255,255,0.03);
       padding: 56px; position: relative; overflow: hidden;
+    }
+    .download-card::after {
+      content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      z-index: 2;
     }
     .download-card::before {
       content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -507,9 +552,21 @@
     .preview { padding: 80px 40px; }
     .preview-container { max-width: 1100px; margin: 0 auto; }
     .preview-glass {
-      border-radius: 24px; background: var(--glass-bg); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(20px); padding: 14px; overflow: hidden;
-      box-shadow: var(--shadow-glass); transition: transform 0.4s ease, box-shadow 0.4s ease;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02) 45%, rgba(34,211,238,0.04));
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35),
+                  inset 0 1px 0 rgba(255,255,255,0.12),
+                  inset 0 -1px 0 rgba(255,255,255,0.02);
+      padding: 14px; overflow: hidden;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+    }
+    .preview-glass::before {
+      content: ''; position: absolute; top: 0; left: 12%; right: 12%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      z-index: 2;
     }
     .preview-glass:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
     .preview-img { width: 100%; border-radius: 16px; display: block; }
@@ -526,30 +583,31 @@
       .hero-subtitle { max-width: 100%; }
       .hero-actions { justify-content: center; }
       .version-bar { justify-content: center; flex-wrap: wrap; }
-      .hero-visual { min-height: 560px; order: -1; }
-      .spirit-stage { width: 330px; height: 480px; }
+      .hero-visual { min-height: 620px; order: -1; }
+      .spirit-stage { width: 340px; height: 540px; }
       .spirit-aura { width: 280px; height: 280px; }
       .spirit-head-light { width: 180px; height: 220px; top: 24%; }
       .spirit-chest-glow { width: 150px; height: 180px; top: 46%; }
-      .greeting-card { left: 50%; bottom: -20px; transform: translateX(-50%); width: 290px; }
-      @keyframes card-float {
-        0%, 100% { transform: translateX(-50%) translateY(0); }
-        50% { transform: translateX(-50%) translateY(-6px); }
-      }
+      .spirit-nameplate { bottom: 100px; padding: 8px 24px; }
+      .greeting-card { width: 292px; bottom: 14px; }
       .nav-links { display: none; }
       .download-card { padding: 36px 24px; }
       .steps-grid { grid-template-columns: 1fr; gap: 8px; }
       .step-connector { display: none; }
     }
     @media (max-width: 480px) {
-      .hero { padding: 100px 20px 80px; }
+      .hero { padding: 100px 20px 40px; }
       .features, .download, .preview, .install { padding-left: 20px; padding-right: 20px; }
-      .spirit-stage { width: 270px; height: 400px; }
+      .spirit-stage { width: 280px; height: 460px; }
       .spirit-aura { width: 230px; height: 230px; }
       .spirit-head-light { width: 150px; height: 180px; top: 24%; }
       .spirit-chest-glow { width: 120px; height: 150px; top: 46%; }
-      .greeting-card { width: 260px; padding: 12px 14px; bottom: -30px; }
-      .greeting-avatar { width: 44px; height: 44px; }
+      .spirit-nameplate { bottom: 96px; padding: 7px 20px; }
+      .spirit-nameplate .np-name { font-size: 13px; }
+      .spirit-nameplate .np-role { font-size: 9px; }
+      .greeting-card { width: 250px; padding: 11px 14px; bottom: 10px; }
+      .greeting-avatar { width: 42px; height: 42px; }
+      .greeting-text { font-size: 12px; }
       .btn { padding: 12px 24px; font-size: 14px; }
     }
 
@@ -629,17 +687,16 @@
               <div class="np-name">星灵AI</div>
               <div class="np-role">内置 AI 助手</div>
             </div>
-          </div>
-
-          <!-- 浮窗问候卡（绝对定位到 hero 左下） -->
-          <div class="greeting-card">
-            <img src="assets/spirit-portrait.webp" alt="星灵AI" class="greeting-avatar">
-            <div class="greeting-content">
-              <div class="greeting-header">
-                <span class="greeting-name">星灵AI</span>
-                <span class="greeting-online">在线</span>
+            <!-- 问候卡：铭牌正下方（同属 stage，垂直对齐） -->
+            <div class="greeting-card">
+              <img src="assets/spirit-portrait.webp" alt="星灵AI" class="greeting-avatar">
+              <div class="greeting-content">
+                <div class="greeting-header">
+                  <span class="greeting-name">星灵AI</span>
+                  <span class="greeting-online">在线</span>
+                </div>
+                <div class="greeting-text">今晚想听点什么？<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>
               </div>
-              <div class="greeting-text">今晚想听点什么？<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>
             </div>
           </div>
         </div>
