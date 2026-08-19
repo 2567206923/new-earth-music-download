@@ -1,0 +1,3 @@
+# 安装包不进 git（GitHub 单文件限制 100MB，exe 253MB 必须走 Releases 托管）
+download/*.exe
+download/*.blockmap

@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新地球音乐 - Neo Earth Music | 官方下载</title>
+  <meta name="description" content="新地球音乐（Neo Earth Music）— 跨平台AI原生音乐流媒体与创作社区。由星灵AI驱动，探索音乐新宇宙。">
+  <link rel="icon" type="image/png" href="assets/app-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #06060e;
+      --accent-purple: #8b5cf6;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #22d3ee;
+      --brand-red: #ec4141;
+      --glass-bg: rgba(255, 255, 255, 0.04);
+      --glass-bg-hover: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --glow-purple: rgba(139, 92, 246, 0.4);
+      --glow-blue: rgba(59, 130, 246, 0.3);
+      --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+      background: var(--bg-deep); color: var(--text-primary);
+      min-height: 100vh; overflow-x: hidden; line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    #starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    .ambient-glow {
+      position: fixed; border-radius: 50%; filter: blur(120px);
+      opacity: 0.35; z-index: 0; pointer-events: none;
+      animation: float 22s ease-in-out infinite;
+    }
+    .glow-1 { width: 620px; height: 620px; background: radial-gradient(circle, var(--glow-purple), transparent 70%); top: -200px; right: -80px; }
+    .glow-2 { width: 520px; height: 520px; background: radial-gradient(circle, var(--glow-blue), transparent 70%); bottom: -150px; left: -100px; animation-delay: -10s; }
+    .glow-3 { width: 420px; height: 420px; background: radial-gradient(circle, rgba(34,211,238,0.18), transparent 70%); top: 40%; left: 30%; animation-delay: -5s; }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 10px) scale(1.02); }
+    }
+    .main-content { position: relative; z-index: 1; }
+
+    /* ===== Nav ===== */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 14px 40px; display: flex; align-items: center; justify-content: space-between;
+      background: rgba(6, 6, 14, 0.65);
+      backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--glass-border); transition: all 0.3s ease;
+    }
+    .nav.scrolled { background: rgba(6, 6, 14, 0.92); box-shadow: 0 4px 30px rgba(0,0,0,0.4); }
+    .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(139,92,246,0.4)); }
+    .nav-title {
+      font-size: 18px; font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: var(--text-secondary); text-decoration: none; font-size: 14px;
+      font-weight: 500; transition: color 0.2s; position: relative;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; border-radius: 1px;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); transition: width 0.3s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ===== Hero ===== */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 120px 40px 60px; position: relative; overflow: hidden;
+    }
+    .hero-inner {
+      max-width: 1240px; width: 100%;
+      display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px; align-items: center;
+    }
+    .hero-content { display: flex; flex-direction: column; gap: 26px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px;
+      border-radius: 100px; background: var(--glass-bg); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px); font-size: 13px; color: var(--accent-cyan); font-weight: 500; width: fit-content;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--accent-cyan);
+      animation: pulse-dot 2s ease-in-out infinite; box-shadow: 0 0 8px var(--accent-cyan);
+    }
+    @keyframes pulse-dot { 0%,100% { opacity:1; transform:scale(1);} 50% { opacity:.5; transform:scale(1.5);} }
+    .hero-title { font-size: clamp(42px, 6vw, 68px); font-weight: 900; line-height: 1.12; letter-spacing: -1.5px; }
+    .hero-title-line2 {
+      background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 40%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-subtitle { font-size: 17px; color: var(--text-secondary); line-height: 1.75; max-width: 500px; font-weight: 300; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 14px 32px; border-radius: 14px; font-size: 15px; font-weight: 600;
+      text-decoration: none; cursor: pointer; border: none; font-family: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-red), #ff6b6b); color: white;
+      box-shadow: 0 4px 20px rgba(236, 65, 65, 0.35), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+    .btn-primary::after {
+      content: ''; position: absolute; top: 0; left: -80%; width: 50%; height: 100%;
+      background: linear-gradient(105deg, transparent, rgba(255,255,255,0.35), transparent);
+      transform: skewX(-20deg); animation: sheen 3.5s ease-in-out infinite;
+    }
+    @keyframes sheen { 0%,60% { left:-80%; } 100% { left:160%; } }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(236,65,65,0.5), inset 0 1px 0 rgba(255,255,255,0.22); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:disabled { opacity: 0.6; cursor: wait; transform: none; }
+    .btn-glass {
+      background: var(--glass-bg); color: var(--text-primary);
+      border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
+    }
+    .btn-glass:hover { background: var(--glass-bg-hover); border-color: var(--glass-border-hover); transform: translateY(-2px); }
+    .btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* ===== Live2D 全息舱 ===== */
+    .hero-visual { display: flex; align-items: center; justify-content: center; min-height: 600px; }
+    .holo-stage { position: relative; width: 460px; height: 620px; }
+
+    /* Live2D 画布 */
+    #live2dCanvas {
+      position: absolute; inset: 0; z-index: 2;
+      width: 100%; height: 100%;
+      cursor: grab;
+    }
+    #live2dCanvas:active { cursor: grabbing; }
+    #live2dCanvas canvas { width: 100% !important; height: 100% !important; }
+
+    /* 加载器 */
+    .holo-loader {
+      position: absolute; inset: 0; z-index: 3;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 16px; color: var(--text-muted); font-size: 13px; letter-spacing: 2px;
+      transition: opacity 0.6s ease; pointer-events: none;
+    }
+    .holo-loader.hidden { opacity: 0; }
+    .loader-ring {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 2px solid rgba(139,92,246,0.15);
+      border-top-color: var(--accent-purple);
+      animation: loader-spin 1s linear infinite;
+    }
+    @keyframes loader-spin { to { transform: rotate(360deg); } }
+
+    /* 静态回退图（CDN 失败时） */
+    .holo-fallback {
+      position: absolute; inset: 0; z-index: 2; display: none;
+      align-items: flex-start; justify-content: center;
+    }
+    .holo-fallback.show { display: flex; }
+    .holo-fallback img {
+      width: 100%; height: 100%; object-fit: contain; object-position: center top;
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, black 62%, rgba(0,0,0,0.35) 90%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 0%, black 62%, rgba(0,0,0,0.35) 90%, transparent 100%);
+      filter: drop-shadow(0 0 46px rgba(139, 92, 246, 0.38)) saturate(1.08);
+      animation: spirit-float 6s ease-in-out infinite;
+    }
+    @keyframes spirit-float { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-14px);} }
+
+    /* 全息舱氛围层 */
+    .holo-beam {
+      position: absolute; bottom: 60px; left: 50%; width: 360px; height: 460px;
+      transform: translateX(-50%);
+      background: conic-gradient(from 200deg at 50% 100%,
+        transparent 0deg, rgba(139,92,246,0.14) 30deg, rgba(34,211,238,0.10) 60deg, transparent 90deg);
+      filter: blur(6px); animation: beam-breathe 7s ease-in-out infinite;
+      pointer-events: none; z-index: 0;
+    }
+    @keyframes beam-breathe {
+      0%,100% { opacity: 0.7; transform: translateX(-50%) scaleY(1); }
+      50% { opacity: 1; transform: translateX(-50%) scaleY(1.04); }
+    }
+    .holo-pool {
+      position: absolute; bottom: 46px; left: 50%; width: 320px; height: 60px;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at center,
+        rgba(139,92,246,0.38) 0%, rgba(59,130,246,0.18) 40%, transparent 70%);
+      filter: blur(10px); animation: pool-pulse 4s ease-in-out infinite;
+      z-index: 1; pointer-events: none;
+    }
+    @keyframes pool-pulse {
+      0%,100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+      50% { opacity: 1; transform: translateX(-50%) scale(1.08); }
+    }
+    .holo-ring { position: absolute; border-radius: 50%; pointer-events: none; z-index: 1; }
+    .holo-ring-back {
+      width: 340px; height: 340px; top: 44%; left: 50%; transform: translate(-50%, -50%);
+      border: 1px solid rgba(139, 92, 246, 0.28);
+      box-shadow: 0 0 40px rgba(139,92,246,0.12), inset 0 0 40px rgba(139,92,246,0.08);
+    }
+    .holo-ring-front {
+      width: 296px; height: 296px; top: 46%; left: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px dashed rgba(34, 211, 238, 0.32);
+      animation: ring-spin 26s linear infinite;
+    }
+    .holo-ring-front::before {
+      content: ''; position: absolute; inset: -2px; border-radius: 50%;
+      background: conic-gradient(from 0deg, transparent 0deg, rgba(34,211,238,0.5) 40deg, transparent 110deg, transparent 250deg, rgba(139,92,246,0.42) 300deg, transparent 360deg);
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+      animation: ring-spin 6s linear infinite;
+    }
+    @keyframes ring-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+    .holo-ring-front::after { content: none; }
+
+    /* 音符粒子（在模型后飘） */
+    .holo-particle {
+      position: absolute; font-size: 15px; color: rgba(196, 181, 253, 0.75);
+      text-shadow: 0 0 12px rgba(139,92,246,0.8);
+      animation: orbit-rise var(--dur) ease-in-out infinite;
+      animation-delay: var(--delay); opacity: 0; z-index: 1; pointer-events: none;
+    }
+    @keyframes orbit-rise {
+      0% { transform: translate(0, 0) rotate(0deg) scale(0.7); opacity: 0; }
+      15% { opacity: 0.9; } 85% { opacity: 0.5; }
+      100% { transform: translate(var(--dx), -180px) rotate(var(--rot)) scale(1.1); opacity: 0; }
+    }
+
+    .holo-nameplate {
+      position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
+      padding: 10px 28px; border-radius: 100px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+      text-align: center; z-index: 5; white-space: nowrap;
+    }
+    .holo-nameplate .np-name {
+      font-size: 15px; font-weight: 700;
+      background: linear-gradient(90deg, #c4b5fd, #67e8f9);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      letter-spacing: 1px;
+    }
+    .holo-nameplate .np-role { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+
+    .holo-hint {
+      position: absolute; top: 10px; right: 6px; z-index: 5;
+      font-size: 11px; color: var(--text-muted); letter-spacing: 1px;
+      padding: 5px 12px; border-radius: 100px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(8px);
+      opacity: 0.85;
+    }
+
+    /* ===== Version Bar ===== */
+    .version-bar {
+      display: flex; align-items: center; gap: 18px; padding: 12px 20px;
+      border-radius: 14px; background: var(--glass-bg); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px); width: fit-content;
+      font-variant-numeric: tabular-nums;
+    }
+    .version-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); }
+    .version-item strong { color: var(--text-secondary); }
+    .version-divider { width: 1px; height: 16px; background: var(--glass-border); }
+
+    /* ===== Sections ===== */
+    .features { padding: 100px 40px; }
+    .section-header { text-align: center; max-width: 620px; margin: 0 auto 64px; }
+    .section-tag {
+      font-size: 13px; font-weight: 600; color: var(--accent-purple);
+      text-transform: uppercase; letter-spacing: 3px; margin-bottom: 14px;
+    }
+    .section-title { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 14px; }
+    .section-desc { font-size: 16px; color: var(--text-secondary); line-height: 1.7; }
+
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; max-width: 1120px; margin: 0 auto;
+    }
+    .feature-card {
+      padding: 32px; border-radius: 20px; background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
+    }
+    .feature-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139,92,246,0.4), transparent);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .feature-card:hover {
+      background: var(--glass-bg-hover); border-color: var(--glass-border-hover);
+      transform: translateY(-4px); box-shadow: var(--shadow-glass);
+    }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 23px; margin-bottom: 20px;
+      background: linear-gradient(135deg, rgba(139,92,246,0.16), rgba(59,130,246,0.10));
+      border: 1px solid rgba(139,92,246,0.16); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .feature-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+    /* ===== Install Steps ===== */
+    .install { padding: 0 40px 100px; }
+    .install-container { max-width: 920px; margin: 0 auto; }
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; position: relative; }
+    .step-card {
+      padding: 32px 28px; text-align: center; position: relative;
+    }
+    .step-num {
+      width: 44px; height: 44px; margin: 0 auto 16px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; font-weight: 700;
+      background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(34,211,238,0.15));
+      border: 1px solid rgba(139,92,246,0.3);
+      box-shadow: 0 0 24px rgba(139,92,246,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+      color: #d8ccff;
+    }
+    .step-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .step-card p { font-size: 13.5px; color: var(--text-secondary); line-height: 1.7; }
+    .step-connector {
+      position: absolute; top: 54px; left: calc(100% - 40px); width: 80px; height: 1px;
+      background: linear-gradient(90deg, rgba(139,92,246,0.4), rgba(34,211,238,0.3));
+    }
+    .install-glass {
+      border-radius: 24px; background: var(--glass-bg); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      padding: 16px; overflow: hidden;
+    }
+
+    /* ===== Download ===== */
+    .download { padding: 100px 40px; }
+    .download-container { max-width: 920px; margin: 0 auto; }
+    .download-card {
+      border-radius: 28px; background: var(--glass-bg); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
+      padding: 56px; position: relative; overflow: hidden;
+    }
+    .download-card::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle at 30% 30%, rgba(139,92,246,0.07), transparent 50%),
+                  radial-gradient(circle at 70% 70%, rgba(59,130,246,0.05), transparent 50%);
+      pointer-events: none;
+    }
+    .download-header { display: flex; align-items: center; gap: 24px; margin-bottom: 40px; position: relative; }
+    .download-app-icon {
+      width: 72px; height: 72px; border-radius: 18px; object-fit: cover;
+      border: 1px solid var(--glass-border); box-shadow: 0 8px 24px rgba(139,92,246,0.25);
+    }
+    .download-info h2 { font-size: 26px; font-weight: 800; margin-bottom: 4px; }
+    .download-info p { color: var(--text-secondary); font-size: 15px; }
+    .platform-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px; position: relative;
+    }
+    .platform-card {
+      padding: 28px; border-radius: 18px; background: rgba(255,255,255,0.02);
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s ease; text-align: center; position: relative; overflow: hidden;
+    }
+    .platform-card.available { cursor: pointer; }
+    .platform-card.available:hover {
+      background: rgba(255,255,255,0.05); border-color: var(--glass-border-hover);
+      transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .platform-card.coming-soon { opacity: 0.5; }
+    .platform-icon { font-size: 36px; margin-bottom: 14px; display: block; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
+    .platform-name { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+    .platform-status { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+    .platform-card.available .platform-status { color: var(--accent-cyan); }
+    .platform-btn {
+      width: 100%; padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 600;
+      border: none; cursor: pointer; transition: all 0.25s; font-family: inherit;
+    }
+    .platform-btn-download {
+      background: linear-gradient(135deg, var(--brand-red), #ff6b6b); color: white;
+      position: relative; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    .platform-btn-download:hover { box-shadow: 0 4px 18px rgba(236,65,65,0.4); }
+    .platform-btn-download:disabled { opacity: 0.65; cursor: wait; }
+    .platform-btn-disabled { background: rgba(255,255,255,0.06); color: var(--text-muted); cursor: not-allowed; }
+    .file-meta { font-size: 12px; color: var(--text-muted); margin-top: 10px; font-variant-numeric: tabular-nums; }
+
+    .toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+      padding: 14px 24px; border-radius: 14px;
+      background: rgba(15, 15, 30, 0.9); border: 1px solid var(--glass-border-hover);
+      backdrop-filter: blur(20px); box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      font-size: 14px; z-index: 200; opacity: 0; pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); max-width: 90vw; text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast a { color: var(--accent-cyan); text-decoration: none; font-weight: 600; }
+    .toast a:hover { text-decoration: underline; }
+
+    .requirements { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--glass-border); position: relative; }
+    .requirements h4 {
+      font-size: 13px; font-weight: 600; color: var(--text-muted);
+      margin-bottom: 14px; text-transform: uppercase; letter-spacing: 2px;
+    }
+    .req-list { display: flex; flex-wrap: wrap; gap: 12px; }
+    .req-tag {
+      padding: 6px 14px; border-radius: 8px; font-size: 13px; color: var(--text-secondary);
+      background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+    }
+
+    /* ===== Preview ===== */
+    .preview { padding: 80px 40px; }
+    .preview-container { max-width: 1100px; margin: 0 auto; }
+    .preview-glass {
+      border-radius: 24px; background: var(--glass-bg); border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px); padding: 14px; overflow: hidden;
+      box-shadow: var(--shadow-glass); transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .preview-glass:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    .preview-img { width: 100%; border-radius: 16px; display: block; }
+
+    /* ===== Footer ===== */
+    .footer { padding: 48px 40px; text-align: center; border-top: 1px solid var(--glass-border); }
+    .footer-logo { width: 32px; height: 32px; margin-bottom: 16px; opacity: 0.75; filter: drop-shadow(0 0 10px rgba(139,92,246,0.3)); }
+    .footer-text { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 960px) {
+      .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 16px; }
+      .hero-content { align-items: center; }
+      .hero-subtitle { max-width: 100%; }
+      .hero-actions { justify-content: center; }
+      .version-bar { justify-content: center; flex-wrap: wrap; }
+      .hero-visual { min-height: 540px; order: -1; }
+      .holo-stage { width: 330px; height: 460px; }
+      .holo-beam { width: 270px; height: 350px; }
+      .holo-ring-back { width: 245px; height: 245px; }
+      .holo-ring-front { width: 215px; height: 215px; }
+      .nav-links { display: none; }
+      .download-card { padding: 36px 24px; }
+      .steps-grid { grid-template-columns: 1fr; gap: 8px; }
+      .step-connector { display: none; }
+    }
+    @media (max-width: 480px) {
+      .hero { padding: 100px 20px 40px; }
+      .features, .download, .preview, .install { padding-left: 20px; padding-right: 20px; }
+      .holo-stage { width: 265px; height: 380px; }
+      .holo-beam { width: 215px; height: 285px; }
+      .holo-ring-back { width: 198px; height: 198px; }
+      .holo-ring-front { width: 172px; height: 172px; }
+      .holo-hint { display: none; }
+      .btn { padding: 12px 24px; font-size: 14px; }
+    }
+
+    .fade-up { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <canvas id="starfield"></canvas>
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <nav class="nav" id="navbar">
+    <a href="#" class="nav-brand">
+      <img src="assets/logo.png" alt="Neo Earth Music" class="nav-logo">
+      <span class="nav-title">新地球音乐</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">功能特性</a></li>
+      <li><a href="#install">安装指引</a></li>
+      <li><a href="#download">立即下载</a></li>
+      <li><a href="#preview">界面预览</a></li>
+    </ul>
+  </nav>
+
+  <div class="main-content">
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="hero-badge"><span class="hero-badge-dot"></span>v0.1.0 正式发布</div>
+          <h1 class="hero-title">
+            <span>新地球音乐</span><br>
+            <span class="hero-title-line2">Neo Earth Music</span>
+          </h1>
+          <p class="hero-subtitle">
+            由星灵 AI 驱动的跨平台音乐流媒体客户端。<br>
+            探索音乐新宇宙，让每一次聆听都成为星际旅行。
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="startDownload(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span class="btn-label">免费下载 Windows 版</span>
+            </button>
+            <a href="#features" class="btn btn-glass">
+              了解更多
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+            </a>
+          </div>
+          <div class="version-bar">
+            <div class="version-item"><strong>v0.1.0</strong>&nbsp;最新版</div>
+            <div class="version-divider"></div>
+            <div class="version-item"><strong>253 MB</strong>&nbsp;安装包</div>
+            <div class="version-divider"></div>
+            <div class="version-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+              Windows 10/11 · 64-bit
+            </div>
+          </div>
+        </div>
+
+        <!-- Live2D 全息舱 -->
+        <div class="hero-visual">
+          <div class="holo-stage">
+            <div class="holo-beam"></div>
+            <div class="holo-pool"></div>
+            <div class="holo-ring holo-ring-back"></div>
+            <span class="holo-particle" style="--dx:150px; --rot:18deg; --dur:5.2s; --delay:0s; top:56%; left:68%;">♪</span>
+            <span class="holo-particle" style="--dx:-140px; --rot:-14deg; --dur:6.4s; --delay:1.4s; top:60%; left:24%;">♫</span>
+            <span class="holo-particle" style="--dx:90px; --rot:10deg; --dur:4.8s; --delay:2.6s; top:48%; left:76%;">♬</span>
+            <span class="holo-particle" style="--dx:-95px; --rot:-8deg; --dur:7.2s; --delay:3.5s; top:52%; left:18%;">♩</span>
+            <span class="holo-particle" style="--dx:35px; --rot:6deg; --dur:5.8s; --delay:4.8s; top:64%; left:55%;">♪</span>
+
+            <div class="holo-fallback" id="holoFallback">
+              <img src="assets/spirit-fullbody.png" alt="星灵 AI" draggable="false">
+            </div>
+            <div id="live2dCanvas"></div>
+            <div class="holo-loader" id="holoLoader">
+              <div class="loader-ring"></div>
+              <div>STELLA LOADING</div>
+            </div>
+            <div class="holo-ring holo-ring-front"></div>
+            <div class="holo-hint">✦ 点击她试试 · 视线跟随鼠标</div>
+            <div class="holo-nameplate">
+              <div class="np-name">星灵 · Stella</div>
+              <div class="np-role">Live2D AI Companion</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES ===== -->
+    <section class="features" id="features">
+      <div class="section-header fade-up">
+        <div class="section-tag">Core Features</div>
+        <h2 class="section-title">探索音乐新宇宙</h2>
+        <p class="section-desc">融合 AI 智能与极致美学，重新定义你的音乐体验</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card fade-up">
+          <div class="feature-icon">🌐</div>
+          <h3>多源聚合</h3>
+          <p>整合网易云音乐、5sing 等多平台音源，一站式畅享海量曲库，搜索即播。</p>
+        </div>
+        <div class="feature-card fade-up">
+          <div class="feature-icon">✨</div>
+          <h3>星灵 AI 伴侣</h3>
+          <p>Live2D 驱动的 Stella AI 智能推荐、歌单生成、情绪陪伴，让 AI 真正懂你。</p>
+        </div>
+        <div class="feature-card fade-up">
+          <div class="feature-icon">🎨</div>
+          <h3>霓虹温室主题</h3>
+          <p>液态玻璃 UI + 苔藓墨绿底色 + 生物荧光绿点缀，暗/亮双模式，视觉即艺术。</p>
+        </div>
+        <div class="feature-card fade-up">
+          <div class="feature-icon">🎵</div>
+          <h3>高品质播放</h3>
+          <p>支持高码率音频解码，精准歌词同步，沉浸式听歌体验。</p>
+        </div>
+        <div class="feature-card fade-up">
+          <div class="feature-icon">📝</div>
+          <h3>智能歌单</h3>
+          <p>心情 / 场景 / 时间 / 习惯四类 AI 歌单自动生成，持久化存储，越用越懂你。</p>
+        </div>
+        <div class="feature-card fade-up">
+          <div class="feature-icon">🚀</div>
+          <h3>跨端架构</h3>
+          <p>Flutter Melos Monorepo 架构，Windows / Android / iOS 三端统一，未来可期。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== INSTALL STEPS ===== -->
+    <section class="install" id="install">
+      <div class="install-container">
+        <div class="section-header fade-up">
+          <div class="section-tag">Quick Start</div>
+          <h2 class="section-title">三步开启音乐之旅</h2>
+          <p class="section-desc">无需复杂配置，一分钟装好</p>
+        </div>
+        <div class="install-glass fade-up">
+          <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-num">1</div>
+              <h4>下载安装包</h4>
+              <p>点击「免费下载」按钮，获取 NewEarthMusic-Setup-0.1.0.exe（253 MB）</p>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">2</div>
+              <h4>运行安装程序</h4>
+              <p>双击下载好的 .exe 文件，Windows 可能提示未知发布者，点击「仍要运行」</p>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">3</div>
+              <h4>开启星际旅行</h4>
+              <p>跟随安装向导完成安装，启动应用，与星灵 Stella 一起探索音乐宇宙</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DOWNLOAD ===== -->
+    <section class="download" id="download">
+      <div class="download-container">
+        <div class="section-header fade-up">
+          <div class="section-tag">Download</div>
+          <h2 class="section-title">获取新地球音乐</h2>
+          <p class="section-desc">选择你的平台，即刻开启星际音乐之旅</p>
+        </div>
+        <div class="download-card fade-up">
+          <div class="download-header">
+            <img src="assets/app-icon.png" alt="App Icon" class="download-app-icon">
+            <div class="download-info">
+              <h2>新地球音乐</h2>
+              <p>Neo Earth Music v0.1.0 · Windows 桌面版</p>
+            </div>
+          </div>
+          <div class="platform-grid">
+            <div class="platform-card available" onclick="startDownload(this)">
+              <span class="platform-icon">🪟</span>
+              <div class="platform-name">Windows</div>
+              <div class="platform-status">✓ 可下载 · v0.1.0</div>
+              <button class="platform-btn platform-btn-download" onclick="event.stopPropagation(); startDownload(this)">
+                <span class="btn-label">下载安装包 (.exe)</span>
+              </button>
+              <div class="file-meta">NewEarthMusic-Setup-0.1.0.exe · 253 MB</div>
+            </div>
+            <div class="platform-card coming-soon">
+              <span class="platform-icon">🍎</span>
+              <div class="platform-name">macOS</div>
+              <div class="platform-status">敬请期待</div>
+              <button class="platform-btn platform-btn-disabled" disabled>即将推出</button>
+            </div>
+            <div class="platform-card coming-soon">
+              <span class="platform-icon">🐧</span>
+              <div class="platform-name">Linux</div>
+              <div class="platform-status">敬请期待</div>
+              <button class="platform-btn platform-btn-disabled" disabled>即将推出</button>
+            </div>
+            <div class="platform-card coming-soon">
+              <span class="platform-icon">🤖</span>
+              <div class="platform-name">Android</div>
+              <div class="platform-status">敬请期待</div>
+              <button class="platform-btn platform-btn-disabled" disabled>即将推出</button>
+            </div>
+          </div>
+          <div class="requirements">
+            <h4>系统要求</h4>
+            <div class="req-list">
+              <span class="req-tag">💻 Windows 10 (64-bit) 及以上</span>
+              <span class="req-tag">🧠 4 GB RAM 或更高</span>
+              <span class="req-tag">💾 500 MB 可用磁盘空间</span>
+              <span class="req-tag">🖥️ 1280×720 分辨率或更高</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PREVIEW ===== -->
+    <section class="preview" id="preview">
+      <div class="preview-container">
+        <div class="section-header fade-up">
+          <div class="section-tag">Preview</div>
+          <h2 class="section-title">界面预览</h2>
+          <p class="section-desc">液态玻璃设计语言，每一帧都是视觉享受</p>
+        </div>
+        <div class="preview-glass fade-up">
+          <img src="assets/banner-ui.png" alt="新地球音乐界面截图" class="preview-img">
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <img src="assets/logo.png" alt="" class="footer-logo">
+      <p class="footer-text">
+        新地球音乐 Neo Earth Music &copy; 2026<br>
+        与星灵 Stella AI 共同打造 · 霓虹温室（Neon Conservatory）主题
+      </p>
+    </footer>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Live2D 运行时（CDN 免费资源，加载失败自动回退静态形象） -->
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.10/dist/browser/pixi.min.js" onerror="window.__pixiFailed=true"></script>
+  <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js" onerror="window.__coreFailed=true"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/index.min.js" onerror="window.__l2dFailed=true"></script>
+
+  <script>
+    /* =====================================================
+       下载配置 — GitHub Releases 免费托管
+       直链格式：https://github.com/<owner>/<repo>/releases/download/<tag>/<file>
+       ===================================================== */
+    const DOWNLOAD_CONFIG = {
+      localUrl: 'download/NewEarthMusic-Setup-0.1.0.exe',
+      releaseUrl: 'https://github.com/2567206923/new-earth-music-download/releases/download/v0.1.0/NewEarthMusic-Setup-0.1.0.exe',
+      releasePage: 'https://github.com/2567206923/new-earth-music-download/releases/tag/v0.1.0',
+      fileName: 'NewEarthMusic-Setup-0.1.0.exe'
+    };
+
+    let toastTimer = null;
+    function showToast(html, duration = 5000) {
+      const toast = document.getElementById('toast');
+      toast.innerHTML = html;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    async function checkFileExists(url) {
+      try { const res = await fetch(url, { method: 'HEAD' }); return res.ok; } catch { return false; }
+    }
+
+    async function startDownload(btn) {
+      const label = btn.querySelector('.btn-label') || btn;
+      const original = label.textContent;
+      btn.disabled = true;
+      label.textContent = '正在准备下载…';
+
+      const localOk = await checkFileExists(DOWNLOAD_CONFIG.localUrl);
+      btn.disabled = false;
+      label.textContent = original;
+
+      if (localOk) {
+        const a = document.createElement('a');
+        a.href = DOWNLOAD_CONFIG.localUrl;
+        a.download = DOWNLOAD_CONFIG.fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        showToast('🚀 下载已开始 — <strong>NewEarthMusic-Setup-0.1.0.exe</strong>（253 MB）', 4000);
+      } else {
+        showToast('🛰️ 正在从 GitHub Releases 为您下载（全球 CDN 加速）…', 4000);
+        window.location.href = DOWNLOAD_CONFIG.releaseUrl;
+      }
+    }
+
+    /* ========== Starfield ========== */
+    (function () {
+      const canvas = document.getElementById('starfield');
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      const STAR_COUNT = 200;
+      function resize() {
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        stars = [];
+        for (let i = 0; i < STAR_COUNT; i++) {
+          stars.push({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            r: Math.random() * 1.5 + 0.3, alpha: Math.random() * 0.8 + 0.2,
+            twinkleSpeed: Math.random() * 0.02 + 0.005, twinklePhase: Math.random() * Math.PI * 2
+          });
+        }
+      }
+      function draw(time) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+          const twinkle = Math.sin(time * s.twinkleSpeed + s.twinklePhase) * 0.3 + 0.7;
+          const alpha = s.alpha * twinkle;
+          ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(220,220,255,' + alpha + ')'; ctx.fill();
+          if (s.r > 1) {
+            ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
+            const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 3);
+            g.addColorStop(0, 'rgba(180,170,255,' + alpha * 0.15 + ')'); g.addColorStop(1, 'transparent');
+            ctx.fillStyle = g; ctx.fill();
+          }
+        });
+        requestAnimationFrame(draw);
+      }
+      window.addEventListener('resize', resize);
+      resize(); requestAnimationFrame(draw);
+    })();
+
+    /* ========== Live2D Stella ========== */
+    (function () {
+      const loader = document.getElementById('holoLoader');
+      const fallback = document.getElementById('holoFallback');
+      const holder = document.getElementById('live2dCanvas');
+
+      function useFallback() {
+        loader.classList.add('hidden');
+        fallback.classList.add('show');
+      }
+
+      async function initLive2D() {
+        if (window.__pixiFailed || window.__coreFailed || window.__l2dFailed ||
+            typeof PIXI === 'undefined' || !window.Live2DCubismCore) { useFallback(); return; }
+
+        try {
+          const app = new PIXI.Application({
+            view: document.createElement('canvas'),
+            transparent: true,
+            autoStart: true,
+            resolution: window.devicePixelRatio || 1,
+            autoDensity: true,
+            antialias: true
+          });
+          holder.appendChild(app.view);
+
+          const stageWidth = () => holder.clientWidth || 460;
+          const stageHeight = () => holder.clientHeight || 620;
+          app.renderer.resize(stageWidth(), stageHeight());
+
+          const model = await PIXI.live2d.Live2DModel.from('assets/live2d/hiyori/Hiyori.model3.json');
+
+          // 按舞台尺寸适配模型
+          const fit = () => {
+            const w = stageWidth(), h = stageHeight();
+            app.renderer.resize(w, h);
+            const scale = Math.min(w / model.internalModel.originalWidth, h / model.internalModel.originalHeight) * 0.98;
+            model.scale.set(scale);
+            model.anchor.set(0.5, 0.5);
+            model.position.set(w / 2, h / 2 + h * 0.06);
+          };
+          fit();
+          app.stage.addChild(model);
+          window.addEventListener('resize', fit);
+
+          // 视线跟随鼠标（整页范围）
+          window.addEventListener('pointermove', e => model.focus(e.clientX, e.clientY));
+
+          // 点击身体播放动作
+          model.on('hit', hitAreas => {
+            if (hitAreas.includes('Body')) model.motion('TapBody');
+          });
+
+          loader.classList.add('hidden');
+        } catch (err) {
+          console.warn('Live2D init failed, fallback to static image:', err);
+          useFallback();
+        }
+      }
+
+      if (document.readyState === 'complete') initLive2D();
+      else window.addEventListener('load', initLive2D);
+    })();
+
+    /* ========== Navbar & Reveal ========== */
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50), { passive: true });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>
