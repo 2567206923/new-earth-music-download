@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>新地球音乐 - Neo Earth Music | 官方下载</title>
-  <meta name="description" content="新地球音乐（Neo Earth Music）— 跨平台AI原生音乐流媒体与创作社区。由星灵AI驱动，探索音乐新宇宙。">
+  <meta name="description" content="新地球音乐（Neo Earth Music）— 内置星灵AI 的跨平台AI原生音乐流媒体与创作客户端，探索音乐新宇宙。">
   <link rel="icon" type="image/png" href="assets/app-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -125,13 +125,14 @@
     }
     @keyframes sheen { 0%,60% { left:-80%; } 100% { left:160%; } }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(236,65,65,0.5), inset 0 1px 0 rgba(255,255,255,0.22); }
-    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:active { transform: translateY(0); box-shadow: 0 2px 12px rgba(236,65,65,0.3), inset 0 1px 0 rgba(255,255,255,0.18); transition-duration: 0.1s; }
     .btn-primary:disabled { opacity: 0.6; cursor: wait; transform: none; }
     .btn-glass {
       background: var(--glass-bg); color: var(--text-primary);
       border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
     }
     .btn-glass:hover { background: var(--glass-bg-hover); border-color: var(--glass-border-hover); transform: translateY(-2px); }
+    .btn-glass:active { transform: translateY(0); transition-duration: 0.1s; }
     .btn svg { width: 20px; height: 20px; flex-shrink: 0; }
 
     /* ===== Live2D 全息舱 ===== */
@@ -178,52 +179,51 @@
     }
     @keyframes spirit-float { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-14px);} }
 
-    /* 全息舱氛围层 */
+    /* 全息舱氛围层（弱化版，让 Live2D 主体成为绝对焦点） */
     .holo-beam {
-      position: absolute; bottom: 60px; left: 50%; width: 360px; height: 460px;
+      position: absolute; bottom: 70px; left: 50%; width: 220px; height: 280px;
       transform: translateX(-50%);
       background: conic-gradient(from 200deg at 50% 100%,
-        transparent 0deg, rgba(139,92,246,0.14) 30deg, rgba(34,211,238,0.10) 60deg, transparent 90deg);
-      filter: blur(6px); animation: beam-breathe 7s ease-in-out infinite;
-      pointer-events: none; z-index: 0;
+        transparent 0deg, rgba(139,92,246,0.08) 30deg, rgba(34,211,238,0.06) 60deg, transparent 90deg);
+      filter: blur(8px); animation: beam-breathe 8s ease-in-out infinite;
+      pointer-events: none; z-index: 0; opacity: 0.6;
     }
     @keyframes beam-breathe {
-      0%,100% { opacity: 0.7; transform: translateX(-50%) scaleY(1); }
-      50% { opacity: 1; transform: translateX(-50%) scaleY(1.04); }
+      0%,100% { opacity: 0.5; transform: translateX(-50%) scaleY(1); }
+      50% { opacity: 0.7; transform: translateX(-50%) scaleY(1.04); }
     }
     .holo-pool {
-      position: absolute; bottom: 46px; left: 50%; width: 320px; height: 60px;
+      position: absolute; bottom: 56px; left: 50%; width: 200px; height: 28px;
       transform: translateX(-50%);
       background: radial-gradient(ellipse at center,
-        rgba(139,92,246,0.38) 0%, rgba(59,130,246,0.18) 40%, transparent 70%);
-      filter: blur(10px); animation: pool-pulse 4s ease-in-out infinite;
+        rgba(139,92,246,0.28) 0%, rgba(59,130,246,0.12) 50%, transparent 75%);
+      filter: blur(8px); animation: pool-pulse 4s ease-in-out infinite;
       z-index: 1; pointer-events: none;
     }
     @keyframes pool-pulse {
-      0%,100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
-      50% { opacity: 1; transform: translateX(-50%) scale(1.08); }
+      0%,100% { opacity: 0.55; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.75; transform: translateX(-50%) scale(1.05); }
     }
     .holo-ring { position: absolute; border-radius: 50%; pointer-events: none; z-index: 1; }
     .holo-ring-back {
-      width: 340px; height: 340px; top: 44%; left: 50%; transform: translate(-50%, -50%);
-      border: 1px solid rgba(139, 92, 246, 0.28);
-      box-shadow: 0 0 40px rgba(139,92,246,0.12), inset 0 0 40px rgba(139,92,246,0.08);
+      width: 260px; height: 260px; top: 46%; left: 50%; transform: translate(-50%, -50%);
+      border: 1px solid rgba(139, 92, 246, 0.18);
+      box-shadow: 0 0 30px rgba(139,92,246,0.08), inset 0 0 30px rgba(139,92,246,0.04);
     }
     .holo-ring-front {
-      width: 296px; height: 296px; top: 46%; left: 50%;
+      width: 230px; height: 230px; top: 47%; left: 50%;
       transform: translate(-50%, -50%);
-      border: 1px dashed rgba(34, 211, 238, 0.32);
-      animation: ring-spin 26s linear infinite;
+      border: 1px dashed rgba(34, 211, 238, 0.22);
+      animation: ring-spin 30s linear infinite;
     }
     .holo-ring-front::before {
       content: ''; position: absolute; inset: -2px; border-radius: 50%;
-      background: conic-gradient(from 0deg, transparent 0deg, rgba(34,211,238,0.5) 40deg, transparent 110deg, transparent 250deg, rgba(139,92,246,0.42) 300deg, transparent 360deg);
+      background: conic-gradient(from 0deg, transparent 0deg, rgba(34,211,238,0.4) 40deg, transparent 110deg, transparent 250deg, rgba(139,92,246,0.32) 300deg, transparent 360deg);
       -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
       mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
-      animation: ring-spin 6s linear infinite;
+      animation: ring-spin 7s linear infinite;
     }
     @keyframes ring-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-    .holo-ring-front::after { content: none; }
 
     /* 音符粒子（在模型后飘） */
     .holo-particle {
@@ -299,11 +299,17 @@
       background: linear-gradient(90deg, transparent, rgba(139,92,246,0.4), transparent);
       opacity: 0; transition: opacity 0.4s;
     }
+    .feature-card::after {
+      content: ''; position: absolute; top: 0; left: -120%; width: 60%; height: 100%;
+      background: linear-gradient(105deg, transparent 0%, rgba(139,92,246,0.06) 30%, rgba(34,211,238,0.08) 50%, transparent 70%);
+      transform: skewX(-20deg); transition: left 0.8s ease; pointer-events: none;
+    }
     .feature-card:hover {
       background: var(--glass-bg-hover); border-color: var(--glass-border-hover);
       transform: translateY(-4px); box-shadow: var(--shadow-glass);
     }
     .feature-card:hover::before { opacity: 1; }
+    .feature-card:hover::after { left: 160%; }
     .feature-icon {
       width: 48px; height: 48px; border-radius: 14px;
       display: flex; align-items: center; justify-content: center; font-size: 23px; margin-bottom: 20px;
@@ -491,13 +497,13 @@
     <section class="hero">
       <div class="hero-inner">
         <div class="hero-content">
-          <div class="hero-badge"><span class="hero-badge-dot"></span>v0.1.0 正式发布</div>
+          <div class="hero-badge"><span class="hero-badge-dot"></span>v0.1.0 · 首次发布</div>
           <h1 class="hero-title">
             <span>新地球音乐</span><br>
             <span class="hero-title-line2">Neo Earth Music</span>
           </h1>
           <p class="hero-subtitle">
-            由星灵 AI 驱动的跨平台音乐流媒体客户端。<br>
+            内置星灵AI 的跨平台音乐流媒体客户端。<br>
             探索音乐新宇宙，让每一次聆听都成为星际旅行。
           </p>
           <div class="hero-actions">
@@ -528,11 +534,9 @@
             <div class="holo-beam"></div>
             <div class="holo-pool"></div>
             <div class="holo-ring holo-ring-back"></div>
-            <span class="holo-particle" style="--dx:150px; --rot:18deg; --dur:5.2s; --delay:0s; top:56%; left:68%;">♪</span>
-            <span class="holo-particle" style="--dx:-140px; --rot:-14deg; --dur:6.4s; --delay:1.4s; top:60%; left:24%;">♫</span>
-            <span class="holo-particle" style="--dx:90px; --rot:10deg; --dur:4.8s; --delay:2.6s; top:48%; left:76%;">♬</span>
-            <span class="holo-particle" style="--dx:-95px; --rot:-8deg; --dur:7.2s; --delay:3.5s; top:52%; left:18%;">♩</span>
-            <span class="holo-particle" style="--dx:35px; --rot:6deg; --dur:5.8s; --delay:4.8s; top:64%; left:55%;">♪</span>
+            <span class="holo-particle" style="--dx:140px; --rot:14deg; --dur:5.6s; --delay:0s; top:54%; left:74%;">♪</span>
+            <span class="holo-particle" style="--dx:-125px; --rot:-10deg; --dur:6.8s; --delay:2.4s; top:58%; left:20%;">♫</span>
+            <span class="holo-particle" style="--dx:48px; --rot:6deg; --dur:7.4s; --delay:4.6s; top:62%; left:55%;">♬</span>
 
             <div class="holo-fallback" id="holoFallback">
               <img src="assets/spirit-fullbody.png" alt="星灵 AI" draggable="false">
@@ -545,8 +549,8 @@
             <div class="holo-ring holo-ring-front"></div>
             <div class="holo-hint">✦ 点击她试试 · 视线跟随鼠标</div>
             <div class="holo-nameplate">
-              <div class="np-name">星灵 · Stella</div>
-              <div class="np-role">Live2D AI Companion</div>
+              <div class="np-name">星灵AI</div>
+              <div class="np-role">内置 AI 助手</div>
             </div>
           </div>
         </div>
@@ -568,8 +572,8 @@
         </div>
         <div class="feature-card fade-up">
           <div class="feature-icon">✨</div>
-          <h3>星灵 AI 伴侣</h3>
-          <p>Live2D 驱动的 Stella AI 智能推荐、歌单生成、情绪陪伴，让 AI 真正懂你。</p>
+          <h3>星灵AI 助手</h3>
+          <p>内置星灵AI 智能推荐、歌单生成、情绪陪伴，让 AI 真正懂你的音乐品味。</p>
         </div>
         <div class="feature-card fade-up">
           <div class="feature-icon">🎨</div>
@@ -619,7 +623,7 @@
             <div class="step-card">
               <div class="step-num">3</div>
               <h4>开启星际旅行</h4>
-              <p>跟随安装向导完成安装，启动应用，与星灵 Stella 一起探索音乐宇宙</p>
+              <p>跟随安装向导完成安装，启动应用，与内置星灵AI一起探索音乐宇宙</p>
             </div>
           </div>
         </div>
@@ -702,7 +706,7 @@
       <img src="assets/logo.png" alt="" class="footer-logo">
       <p class="footer-text">
         新地球音乐 Neo Earth Music &copy; 2026<br>
-        与星灵 Stella AI 共同打造 · 霓虹温室（Neon Conservatory）主题
+        内置星灵AI · 霓虹温室（Neon Conservatory）主题
       </p>
     </footer>
 
@@ -801,7 +805,7 @@
       resize(); requestAnimationFrame(draw);
     })();
 
-    /* ========== Live2D Stella ========== */
+    /* ========== Live2D 星灵AI ========== */
     (function () {
       const loader = document.getElementById('holoLoader');
       const fallback = document.getElementById('holoFallback');
@@ -837,10 +841,10 @@
           const fit = () => {
             const w = stageWidth(), h = stageHeight();
             app.renderer.resize(w, h);
-            const scale = Math.min(w / model.internalModel.originalWidth, h / model.internalModel.originalHeight) * 0.98;
+            const scale = Math.min(w / model.internalModel.originalWidth, h / model.internalModel.originalHeight) * 1.25;
             model.scale.set(scale);
             model.anchor.set(0.5, 0.5);
-            model.position.set(w / 2, h / 2 + h * 0.06);
+            model.position.set(w / 2, h / 2 + h * 0.04);
           };
           fit();
           app.stage.addChild(model);
